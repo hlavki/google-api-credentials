@@ -87,14 +87,14 @@
                         </Export-Package>
                         <Import-Package>
                             *,
-                            io.jsonwebtoken.io;resolution:="optional",
-                            io.jsonwebtoken.lang;resolution:="optional",
-                            io.jsonwebtoken.security;resolution:="optional",
-                            io.jsonwebtoken.impl;resolution:="optional",
-                            io.jsonwebtoken.impl.compression;resolution:="optional",
-                            io.jsonwebtoken.impl.crypto;resolution:="optional",
-                            io.jsonwebtoken.impl.lang;resolution:="optional",
-                            io.jsonwebtoken.jackson.io;resolution:="optional"
+                            io.jsonwebtoken.io,
+                            io.jsonwebtoken.lang,
+                            io.jsonwebtoken.security,
+                            io.jsonwebtoken.impl,
+                            io.jsonwebtoken.impl.compression,
+                            io.jsonwebtoken.impl.crypto,
+                            io.jsonwebtoken.impl.lang,
+                            io.jsonwebtoken.jackson.io
                         </Import-Package>
                         <Bundle-SymbolicName>${project.artifactId}</Bundle-SymbolicName>
                     </instructions>
