@@ -1,4 +1,4 @@
-package camp.xit.google.api.serviceaccount;
+package camp.xit.google.api.credentials;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;

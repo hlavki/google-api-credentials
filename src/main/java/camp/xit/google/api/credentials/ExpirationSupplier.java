@@ -1,4 +1,4 @@
-package camp.xit.google.api.serviceaccount;
+package camp.xit.google.api.credentials;
 
 import java.util.concurrent.TimeUnit;
 import java.util.function.Supplier;

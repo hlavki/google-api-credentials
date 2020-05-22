@@ -1,4 +1,4 @@
-package camp.xit.google.api.serviceaccount;
+package camp.xit.google.api.credentials;
 
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
