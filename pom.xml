@@ -3,7 +3,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>camp.xit.google</groupId>
     <artifactId>google-api-service-account</artifactId>
-    <version>0.1-SNAPSHOT</version>
+    <version>0.1</version>
     <packaging>bundle</packaging>
 
     <properties>
@@ -16,7 +16,7 @@
 
     <scm>
         <connection>scm:git:ssh://git@code.xit.camp:xit/common/google-api-service-account.git</connection>
-        <tag>HEAD</tag>
+        <tag>v0.1</tag>
     </scm>
 
     <distributionManagement>
