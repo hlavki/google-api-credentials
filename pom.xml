@@ -89,7 +89,6 @@
                         </Export-Package>
                         <Import-Package>
                             *,
-                            io.jsonwebtoken;resolution:="optional",
                             io.jsonwebtoken.io;resolution:="optional",
                             io.jsonwebtoken.lang;resolution:="optional",
                             io.jsonwebtoken.security;resolution:="optional",
