@@ -1,22 +1,29 @@
 package camp.xit.google.api.serviceaccount;
 
 import com.fasterxml.jackson.databind.DeserializationFeature;
-import com.fasterxml.jackson.databind.json.JsonMapper;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URI;
-import java.net.URLEncoder;
-import java.net.http.HttpClient;
-import java.net.http.HttpRequest;
-import java.net.http.HttpResponse;
-import java.nio.charset.Charset;
 import java.time.Instant;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
+import java.util.List;
 import java.util.concurrent.TimeUnit;
+import org.apache.http.Consts;
+import org.apache.http.HttpStatus;
+import org.apache.http.NameValuePair;
+import org.apache.http.StatusLine;
+import org.apache.http.client.entity.UrlEncodedFormEntity;
+import org.apache.http.client.methods.CloseableHttpResponse;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.impl.client.CloseableHttpClient;
+import org.apache.http.impl.client.HttpClients;
+import org.apache.http.message.BasicNameValuePair;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -26,8 +33,8 @@ public final class GoogleCredentials {
     private static final int TOKEN_EXPIRATION = 3600;
 
     private final ExpirationSupplier<ClientAccessToken> tokenCache;
-    private final JsonMapper jsonMapper;
-    private final HttpClient httpClient;
+    private final ObjectMapper objMapper;
+    private final CloseableHttpClient httpClient;
     private final ServiceAccount serviceAccount;
     private final String scopes;
 
@@ -36,8 +43,12 @@ public final class GoogleCredentials {
     }
 
     public GoogleCredentials(File serviceAccountFile, String... scopes) {
-        this.jsonMapper = getJsonMapper();
-        this.httpClient = HttpClient.newHttpClient();
+        this(serviceAccountFile, HttpClients.createDefault(), scopes);
+    }
+
+    public GoogleCredentials(File serviceAccountFile, CloseableHttpClient httpClient, String... scopes) {
+        this.objMapper = getObjMapper();
+        this.httpClient = httpClient;
         this.serviceAccount = readServiceAccount(serviceAccountFile);
         this.tokenCache = new ExpirationSupplier<>(this::readToken, TOKEN_EXPIRATION - 3, TimeUnit.SECONDS);
         this.scopes = String.join("", Arrays.asList(scopes));
@@ -47,15 +58,15 @@ public final class GoogleCredentials {
         return tokenCache.get();
     }
 
-    private JsonMapper getJsonMapper() {
-        JsonMapper mapper = new JsonMapper();
+    private ObjectMapper getObjMapper() {
+        ObjectMapper mapper = new ObjectMapper();
         mapper.disable(DeserializationFeature.FAIL_ON_IGNORED_PROPERTIES);
         return mapper;
     }
 
     private ServiceAccount readServiceAccount(File serviceAccountFile) {
         try {
-            return jsonMapper.readValue(serviceAccountFile, ServiceAccount.class);
+            return objMapper.readValue(serviceAccountFile, ServiceAccount.class);
         } catch (IOException e) {
             throw new IllegalArgumentException("Cannot read service account file", e);
         }
@@ -74,23 +85,27 @@ public final class GoogleCredentials {
                 .claim("scope", scopes)
                 .compact();
 
-        String type = URLEncoder.encode(OAuthConstants.JWT_BEARER_GRANT, Charset.defaultCharset());
-        String assertion = URLEncoder.encode(encodedToken, Charset.defaultCharset());
-        String query = "grant_type=" + type + "&assertion=" + assertion;
+        List<NameValuePair> formparams = new ArrayList<NameValuePair>();
+        formparams.add(new BasicNameValuePair("grant_type", OAuthConstants.JWT_BEARER_GRANT));
+        formparams.add(new BasicNameValuePair("assertion", encodedToken));
+        UrlEncodedFormEntity entity = new UrlEncodedFormEntity(formparams, Consts.UTF_8);
 
-        HttpRequest request = HttpRequest.newBuilder()
-                .uri(URI.create(serviceAccount.getTokenUri()))
-                .POST(HttpRequest.BodyPublishers.ofString(query))
-                .header("Content-Type", "application/x-www-form-urlencoded")
-                .header("Accept", "application/json")
-                .build();
+        HttpPost request = new HttpPost(URI.create(serviceAccount.getTokenUri()));
+        request.setEntity(entity);
+        request.setHeader("Content-Type", "application/x-www-form-urlencoded");
+        request.setHeader("Accept", "application/json");
 
         try {
-            HttpResponse<InputStream> response = httpClient.send(request, HttpResponse.BodyHandlers.ofInputStream());
-            try (InputStream in = response.body()) {
-                return jsonMapper.readValue(in, ClientAccessToken.class);
+            CloseableHttpResponse response = httpClient.execute(request);
+            StatusLine statusLine = response.getStatusLine();
+            if (statusLine.getStatusCode() == HttpStatus.SC_OK) {
+                try ( InputStream in = response.getEntity().getContent()) {
+                    return objMapper.readValue(in, ClientAccessToken.class);
+                }
+            } else {
+                throw new RuntimeException("Cannot obtain access token. Status: " + statusLine);
             }
-        } catch (IOException | InterruptedException e) {
+        } catch (IOException e) {
             throw new RuntimeException("Cannot read access token", e);
         }
     }
