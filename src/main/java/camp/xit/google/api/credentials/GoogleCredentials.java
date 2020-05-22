@@ -2,8 +2,8 @@ package camp.xit.google.api.credentials;
 
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
+import io.jsonwebtoken.impl.DefaultJwtBuilder;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
@@ -76,7 +76,7 @@ public final class GoogleCredentials {
         LOG.info("Refreshing access token");
 
         Instant now = Instant.now();
-        String encodedToken = Jwts.builder()
+        String encodedToken = new DefaultJwtBuilder()
                 .setIssuer(serviceAccount.getClientEmail())
                 .setAudience(serviceAccount.getTokenUri())
                 .setIssuedAt(Date.from(now))
