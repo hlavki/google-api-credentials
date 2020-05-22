@@ -87,6 +87,18 @@
                         <Export-Package>
                             camp.xit.google.api.serviceaccount
                         </Export-Package>
+                        <Import-Package>
+                            *,
+                            io.jsonwebtoken;resolution:="optional",
+                            io.jsonwebtoken.io;resolution:="optional",
+                            io.jsonwebtoken.lang;resolution:="optional",
+                            io.jsonwebtoken.security;resolution:="optional",
+                            io.jsonwebtoken.impl;resolution:="optional",
+                            io.jsonwebtoken.impl.compression;resolution:="optional",
+                            io.jsonwebtoken.impl.crypto;resolution:="optional",
+                            io.jsonwebtoken.impl.lang;resolution:="optional",
+                            io.jsonwebtoken.jackson.io;resolution:="optional"
+                        </Import-Package>
                         <Bundle-SymbolicName>${project.artifactId}</Bundle-SymbolicName>
                     </instructions>
                 </configuration>
