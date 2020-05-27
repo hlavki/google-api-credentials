@@ -3,6 +3,7 @@ package camp.xit.google.api.credentials;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import java.security.PrivateKey;
+import java.security.interfaces.RSAPrivateKey;
 
 public class ServiceAccount {
 
@@ -13,7 +14,7 @@ public class ServiceAccount {
     private String privateKeyId;
     @JsonProperty("private_key")
     @JsonDeserialize(using = PrivateKeyDeserializer.class)
-    private PrivateKey privateKey;
+    private RSAPrivateKey privateKey;
     @JsonProperty("client_email")
     private String clientEmail;
     @JsonProperty("client_id")
@@ -54,11 +55,11 @@ public class ServiceAccount {
         this.privateKeyId = privateKeyId;
     }
 
-    public PrivateKey getPrivateKey() {
+    public RSAPrivateKey getPrivateKey() {
         return privateKey;
     }
 
-    public void setPrivateKey(PrivateKey privateKey) {
+    public void setPrivateKey(RSAPrivateKey privateKey) {
         this.privateKey = privateKey;
     }
 
