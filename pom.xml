@@ -3,7 +3,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>camp.xit.google</groupId>
     <artifactId>google-api-credentials</artifactId>
-    <version>1.2-SNAPSHOT</version>
+    <version>1.2</version>
 
     <properties>
         <maven.compiler.source>11</maven.compiler.source>
@@ -15,7 +15,7 @@
 
     <scm>
         <connection>scm:git:ssh://git@code.xit.camp:xit/common/google-api-service-account.git</connection>
-        <tag>r1.2</tag>
+        <tag>v1.2</tag>
     </scm>
 
     <distributionManagement>
