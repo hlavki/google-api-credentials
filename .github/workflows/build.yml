@@ -17,5 +17,4 @@ jobs:
     - name: Deploy Maven
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      run: mvn --batch-mode -X -s .github/settings.xml deploy
-
+      run: mvn --batch-mode -s .github/settings.xml deploy
