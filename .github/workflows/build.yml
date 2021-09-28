@@ -6,14 +6,16 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
-      - name: Set up JDK 11
-        uses: actions/setup-java@v2
-        with:
-          java-version: '11'
-          distribution: 'adopt'
-      - name: Build Maven
-        run: mvn --batch-mode --update-snapshots install
-      - name: Deploy Maven
-        run: cat .github/settings.xml && mvn --batch-mode -X -s .github/settings.xml deploy
+    - uses: actions/checkout@v2
+    - name: Set up JDK 11
+      uses: actions/setup-java@v2
+      with:
+        java-version: '11'
+        distribution: 'adopt'
+    - name: Build Maven
+      run: mvn --batch-mode --update-snapshots install
+    - name: Deploy Maven
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      run: cat .github/settings.xml && mvn --batch-mode -X -s .github/settings.xml deploy
 
