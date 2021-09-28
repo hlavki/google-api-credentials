@@ -15,5 +15,5 @@ jobs:
       - name: Build Maven
         run: mvn --batch-mode --update-snapshots install
       - name: Deploy Maven
-        run: mvn --batch-mode -s .github/settings.xml deploy
+        run: cat .github/settings.xml && mvn --batch-mode -X -s .github/settings.xml deploy
 
