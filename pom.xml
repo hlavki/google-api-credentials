@@ -14,19 +14,16 @@
     </properties>
 
     <scm>
-        <connection>scm:git:ssh://git@code.xit.camp:xit/common/google-api-service-account.git</connection>
+        <connection>scm:git:ssh://git@github.com:hlavki/google-api-credentials.git</connection>
         <tag>HEAD</tag>
     </scm>
 
     <distributionManagement>
         <repository>
-            <id>xit-releases</id>
-            <url>https://repository.xit.camp/repository/maven-releases</url>
+            <id>github</id>
+            <name>GitHub Maven Packages</name>
+            <url>https://maven.pkg.github.com/hlavki/google-api-credentials</url>
         </repository>
-        <snapshotRepository>
-            <id>xit-snapshots</id>
-            <url>https://repository.xit.camp/repository/maven-snapshots</url>
-        </snapshotRepository>
     </distributionManagement>
 
     <dependencies>
